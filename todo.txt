@@ -6,4 +6,8 @@ the products, all the clothing on the model are DSG products (excluding the shoe
 already did a simple captioning of the small test set
 now the issue is trying to run the initial training of the LoRA
 
-nee
+Todo
+1. install kohya
+2. Test simple lora using kohya
+3. Test simple lora using ComfyUI train LoRA checkpoint
+4. Test simple lora using own python script
