@@ -1,0 +1,9 @@
+the products, all the clothing on the model are DSG products (excluding the shoes).  So the pants, shorts, tops, windbreakers, etc... are all DSG brand products.
+
+ - need to figure out automated script to caption the images and the products
+ - do simple training run of a select set of images (only do small training batch)
+
+already did a simple captioning of the small test set
+now the issue is trying to run the initial training of the LoRA
+
+nee

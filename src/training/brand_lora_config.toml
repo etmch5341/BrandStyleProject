@@ -1,0 +1,55 @@
+# config/brand_lora_config.toml
+
+[model_arguments]
+pretrained_model_name_or_path = "stabilityai/stable-diffusion-xl-base-1.0"
+v2 = false
+v_parameterization = false
+
+[dataset_arguments]
+resolution = 1024
+batch_size = 1
+enable_bucket = true
+min_bucket_reso = 512
+max_bucket_reso = 2048
+bucket_reso_steps = 64
+
+[[datasets]]
+[[datasets.subsets]]
+image_dir = "../training/datasets/brand_references"
+num_repeats = 10
+
+[training_arguments]
+output_dir = "../training/output"
+output_name = "brand_v1"
+save_model_as = "safetensors"
+max_train_steps = 1500
+learning_rate = 1e-4
+lr_scheduler = "cosine"
+lr_warmup_steps = 150
+
+optimizer_type = "AdamW8bit"
+text_encoder_lr = 5e-5
+unet_lr = 1e-4
+
+network_module = "networks.lora"
+network_dim = 32  # LoRA rank
+network_alpha = 16
+
+# Trigger word
+trigger_word = "[brandname]style"
+
+# Mixed precision for speed
+mixed_precision = "fp16"
+save_precision = "fp16"
+
+# Logging
+logging_dir = "../training/logs"
+log_with = "tensorboard"
+
+# Save checkpoints
+save_every_n_epochs = 5
+save_state = false
+
+# AWS A10 optimization
+gradient_checkpointing = true
+xformers = true
