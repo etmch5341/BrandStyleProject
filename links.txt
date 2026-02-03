@@ -1,0 +1,1 @@
+https://huggingface.co/spaces/black-forest-labs/FLUX.2-klein-9B

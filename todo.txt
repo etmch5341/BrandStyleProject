@@ -11,3 +11,20 @@ Todo
 2. Test simple lora using kohya
 3. Test simple lora using ComfyUI train LoRA checkpoint
 4. Test simple lora using own python script
+
+---
+1/13/26
+
+tested code in collab and was able to get some results
+one of the results seem promising but most of the time it didn't generate well
+but I think the model generally understands and the LoRA seems to work somewhat
+
+but I definetely think it needs more data or better training params
+
+Todo for this week
+1. try looking to see if kohya works or is there an alternative but ngl it is pretty annoying to setup on mac
+2. Make a ComfyUI workflow to train LoRA (see if it is better or not)
+ - if it is better than just abandon the code setup for now
+ - should really honestly work in ComfyUI for now just because it is easy to develop and change things
+ - just leave the code alone for now, it is just a proof of concept and just to see how LoRA effects things
+3. Try the florence 2 model (see if it is better for our use case)
