@@ -155,7 +155,9 @@ async def verify_key(key: str = Security(api_key_header)):
 # Helpers — load image from bytes
 # ─────────────────────────────────────────────
 def bytes_to_pil(data: bytes) -> Image.Image:
-    return Image.open(BytesIO(data)).convert("RGB")
+    buf = BytesIO(data)
+    buf.seek(0)
+    return Image.open(buf).convert("RGB")
 
 
 # ─────────────────────────────────────────────
