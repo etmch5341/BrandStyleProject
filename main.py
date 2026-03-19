@@ -51,7 +51,7 @@ jobs: dict = {}
 # ─────────────────────────────────────────────
 # S3 client
 # ─────────────────────────────────────────────
-s3 = boto3.client("s3", region_name=AWS_REGION)
+s3 = boto3.client("s3")
 
 
 def upload_pil_to_s3(img: Image.Image, key: str) -> str:
