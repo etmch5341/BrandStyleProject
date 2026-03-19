@@ -51,7 +51,13 @@ jobs: dict = {}
 # ─────────────────────────────────────────────
 # S3 client
 # ─────────────────────────────────────────────
-s3 = boto3.client("s3")
+from botocore.config import Config
+
+s3 = boto3.client(
+    "s3",
+    region_name="us-east-2",
+    config=Config(signature_version="s3v4")
+)
 
 
 def upload_pil_to_s3(img: Image.Image, key: str) -> str:
