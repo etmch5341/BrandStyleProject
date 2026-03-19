@@ -24,6 +24,17 @@ function useFileSlot() {
   return { file, preview, pick, clear, ref };
 }
 
+const handleDownload = async (url, filename) => {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  const blobUrl = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = blobUrl;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(blobUrl);
+};
+
 // ─── Sub-components ─────────────────────────────────────────────────────────
 function ImageSlot({ label, sub, slot, required = false }) {
   return (
@@ -109,14 +120,26 @@ function ResultPanel({ job }) {
               <div style={styles.resultImgWrap}>
                 <div style={styles.imgLabel}>FLUX Output</div>
                 <img src={job.fluxUrl} alt="Flux output" style={styles.resultImg} />
-                <a href={job.fluxUrl} download style={styles.dlBtn}>↓ Download</a>
+                {/* <button 
+                  onClick={() => handleDownload(job.fluxUrl, "flux_output.png")} 
+                  style={{...styles.dlBtn, background: "none", border: "none", cursor: "pointer"}}
+                >
+                  ↓ Download
+                </button> */}
+                <a href={job.fluxUrl} target="_blank" rel="noopener noreferrer" style={styles.dlBtn}>↓ Open Image</a>
               </div>
             )}
             {job.finalUrl && job.vtonApplied && (
               <div style={styles.resultImgWrap}>
                 <div style={styles.imgLabel}>Final (VTON Applied)</div>
                 <img src={job.finalUrl} alt="VTON output" style={styles.resultImg} />
-                <a href={job.finalUrl} download style={styles.dlBtn}>↓ Download</a>
+                {/* <button 
+                  onClick={() => handleDownload(job.finalUrl, "final_output.png")} 
+                  style={{...styles.dlBtn, background: "none", border: "none", cursor: "pointer"}}
+                >
+                  ↓ Download
+                </button> */}
+                <a href={job.finalUrl} target="_blank" rel="noopener noreferrer" style={styles.dlBtn}>↓ Open Image</a>
               </div>
             )}
           </div>
