@@ -83,6 +83,7 @@ def load_flux():
     flux_pipe = Flux2KleinPipeline.from_pretrained(
         FLUX_REPO_ID, torch_dtype=TORCH_DTYPE
     ).to(DEVICE)
+    flux_pipe.enable_model_cpu_offload()
     log.info("✓ FLUX.2-klein ready")
 
 
