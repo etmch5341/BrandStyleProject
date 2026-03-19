@@ -286,6 +286,7 @@ async def generate(
     # Read file bytes (FastAPI UploadFile is async)
     model_bytes   = await model_reference.read()   if model_reference   else None
     bg_bytes      = await background_reference.read() if background_reference else None
+    print(f"DEBUG bg_bytes length: {len(bg_bytes) if bg_bytes else 0}")
     garment_bytes = await garment_image.read()     if garment_image     else None
     add1          = await additional_ref_1.read()  if additional_ref_1  else None
     add2          = await additional_ref_2.read()  if additional_ref_2  else None
