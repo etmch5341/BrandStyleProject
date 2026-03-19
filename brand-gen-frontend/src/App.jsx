@@ -2,8 +2,8 @@ import { useState, useRef, useCallback } from "react";
 
 // ─── Config ────────────────────────────────────────────────────────────────
 // Replace with your actual API Gateway URL and key
-const API_BASE = "https://YOUR-API-GATEWAY-URL";
-const API_KEY  = "YOUR-API-KEY";
+const API_BASE = "https://agc9y5fncg.execute-api.us-east-2.amazonaws.com/prod";
+const API_KEY  = "KRdjm4Xtqe8rNgfAstgQt90d86ObBksB7iQ0lEgF";
 
 const headers = () => ({ "X-API-Key": API_KEY });
 
