@@ -71,20 +71,33 @@ def upload_pil_to_s3(img: Image.Image, key: str) -> str:
 # ─────────────────────────────────────────────
 # Model loading
 # ─────────────────────────────────────────────
+# def load_flux():
+#     global flux_pipe
+#     from diffusers import Flux2KleinPipeline
+#     from huggingface_hub import login
+
+#     log.info("Logging into Hugging Face...")
+#     login(token=HF_TOKEN)
+
+#     log.info(f"Loading FLUX.2-klein from {FLUX_REPO_ID} ...")
+#     flux_pipe = Flux2KleinPipeline.from_pretrained(
+#         FLUX_REPO_ID, torch_dtype=TORCH_DTYPE
+#     ).to(DEVICE)
+#     flux_pipe.enable_model_cpu_offload()
+#     log.info("✓ FLUX.2-klein ready")
+
 def load_flux():
     global flux_pipe
     from diffusers import Flux2KleinPipeline
     from huggingface_hub import login
 
-    log.info("Logging into Hugging Face...")
     login(token=HF_TOKEN)
 
-    log.info(f"Loading FLUX.2-klein from {FLUX_REPO_ID} ...")
     flux_pipe = Flux2KleinPipeline.from_pretrained(
-        FLUX_REPO_ID, torch_dtype=TORCH_DTYPE
-    ).to(DEVICE)
-    flux_pipe.enable_model_cpu_offload()
-    log.info("✓ FLUX.2-klein ready")
+        FLUX_REPO_ID,
+        torch_dtype=TORCH_DTYPE,
+        device_map="balanced"
+    )
 
 
 def load_vton():
