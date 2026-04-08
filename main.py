@@ -451,9 +451,17 @@ def build_bfl_payload(
     width: int = 1024,
     height: int = 1024,
 ) -> dict:
-    # Count active refs to inject anchors for any that are missing
-    active_refs = [b for b in [bg_ref_bytes, model_ref_bytes, *additional_refs_bytes] if b]
-    prompt = ensure_image_references(prompt, len(active_refs))
+    # Build ordered ref list: bg → model → additional (matches prompt indexing)
+    ordered_refs = []
+    if bg_ref_bytes:
+        ordered_refs.append(bg_ref_bytes)
+    if model_ref_bytes:
+        ordered_refs.append(model_ref_bytes)
+    for b in additional_refs_bytes:
+        ordered_refs.append(b)
+
+    # Inject image index anchors for any missing references
+    prompt = ensure_image_references(prompt, len(ordered_refs))
 
     payload: dict = {
         "prompt":           prompt,
@@ -466,23 +474,12 @@ def build_bfl_payload(
         "seed":             random.randint(0, 2**32 - 1),
     }
 
-    # Primary image_prompt: model ref > bg ref
-    primary_ref = model_ref_bytes or bg_ref_bytes
-    if primary_ref:
-        payload["image_prompt"]          = bytes_to_b64(primary_ref)
-        payload["image_prompt_strength"] = 0.15
-
-    # Verbal injection for secondary refs
-    ref_notes: list[str] = []
-    if bg_ref_bytes and model_ref_bytes:
-        ref_notes.append("Use the location and lighting from the background reference.")
-    if additional_refs_bytes:
-        ref_notes.append(
-            f"Incorporate style/product details from {len(additional_refs_bytes)} "
-            "additional reference image(s)."
-        )
-    if ref_notes:
-        payload["prompt"] = " ".join(ref_notes) + " " + prompt
+    # Pass references as input_image, input_image_2, input_image_3...
+    # This is the correct field naming for flux-2-pro and flux-2-max
+    for i, ref_bytes in enumerate(ordered_refs):
+        key = "input_image" if i == 0 else f"input_image_{i + 1}"
+        payload[key] = bytes_to_b64(ref_bytes)
+        log.info(f"  Attached reference: {key}")
 
     return payload
 
