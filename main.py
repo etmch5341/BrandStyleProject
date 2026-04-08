@@ -16,6 +16,7 @@ import threading
 import random
 import logging
 import httpx
+import json
 from io import BytesIO
 from pathlib import Path
 from typing import Optional, List
@@ -754,13 +755,17 @@ async def improve_prompt(
     raw_text = data.get("message", {}).get("content", "")
 
     # Strip markdown fences if the model wrapped the JSON
-    clean = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw_text.strip())
+    clean = re.sub(r"```(?:json)?", "", raw_text).replace("```", "").strip()
 
-    import json
+    # Extract the outermost JSON object — handles models that prepend/append text
+    match = re.search(r'\{.*\}', clean, re.DOTALL)
+    if not match:
+        raise HTTPException(500, f"No JSON object found in Ollama response: {raw_text[:500]}")
+
     try:
-        result = json.loads(clean)
-    except json.JSONDecodeError:
-        raise HTTPException(500, f"Ollama returned non-JSON response: {raw_text[:500]}")
+        result = json.loads(match.group())
+    except json.JSONDecodeError as exc:
+        raise HTTPException(500, f"Failed to parse JSON from Ollama response: {exc} — raw: {raw_text[:500]}")
 
     return result
 
