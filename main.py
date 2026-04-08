@@ -395,38 +395,39 @@ def bfl_headers() -> dict:
 
 
 def bfl_submit(payload: dict, model: str) -> str:
+    """Submit to BFL and return the polling_url directly from the response."""
     url = f"{BFL_BASE_URL}/{model}"
     resp = httpx.post(url, json=payload, headers=bfl_headers(), timeout=30)
     resp.raise_for_status()
     data = resp.json()
-    task_id = data.get("id")
-    if not task_id:
-        raise RuntimeError(f"BFL did not return a task id: {data}")
-    log.info(f"BFL task submitted: {task_id} (model={model})")
-    return task_id
+    polling_url = data.get("polling_url")
+    if not polling_url:
+        raise RuntimeError(f"BFL did not return a polling_url: {data}")
+    log.info(f"BFL task submitted, polling: {polling_url}")
+    return polling_url
 
 
-def bfl_poll(task_id: str) -> str:
-    poll_url = f"{BFL_BASE_URL}/get_result"
+def bfl_poll(polling_url: str) -> str:
+    """Poll the polling_url directly until Ready."""
     deadline = time.time() + BFL_POLL_TIMEOUT
 
     while time.time() < deadline:
-        resp = httpx.get(poll_url, params={"id": task_id}, headers=bfl_headers(), timeout=15)
+        resp = httpx.get(polling_url, headers=bfl_headers(), timeout=15)
         resp.raise_for_status()
         data = resp.json()
         state = data.get("status", "")
 
         if state == "Ready":
             image_url = data["result"]["sample"]
-            log.info(f"BFL task {task_id} ready")
+            log.info(f"BFL task ready: {image_url}")
             return image_url
         if state in ("Error", "Failed", "Content Moderated", "Request Moderated"):
-            raise RuntimeError(f"BFL task {task_id} ended with status '{state}': {data}")
+            raise RuntimeError(f"BFL task ended with status '{state}': {data}")
 
-        log.debug(f"BFL task {task_id}: {state}")
+        log.debug(f"BFL status: {state}")
         time.sleep(BFL_POLL_INTERVAL)
 
-    raise TimeoutError(f"BFL task {task_id} did not complete within {BFL_POLL_TIMEOUT}s")
+    raise TimeoutError(f"BFL task did not complete within {BFL_POLL_TIMEOUT}s")
 
 
 def ensure_image_references(prompt: str, ref_count: int) -> str:
