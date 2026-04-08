@@ -59,7 +59,7 @@ TORCH_DTYPE_STR     = os.getenv("TORCH_DTYPE", "bfloat16")
 
 # Ollama
 OLLAMA_BASE_URL     = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-OLLAMA_MODEL        = os.getenv("OLLAMA_MODEL", "qwen2.5:3b")
+OLLAMA_MODEL        = os.getenv("OLLAMA_MODEL", "qwen3:14b")
 
 CLOUDFRONT_OUTPUTS  = "https://d52unpfog765b.cloudfront.net"
 
