@@ -180,7 +180,7 @@ Return a single JSON object combining both phases:
 }
 
 Return only valid JSON. No preamble, no markdown, no explanation outside the JSON structure.
-Return a single JSON object combining both phases. Do not include any text, headers, or markdown outside the JSON. Do not split into two separate JSON objects. Your entire response must be one valid JSON object starting with {{ and ending with }}."""
+Return a single JSON object combining both phases. Do not include any text, headers, or markdown outside the JSON. Do not split into two separate JSON objects. Your entire response must be one valid JSON object starting with {{ and ending with }}.
 """
 
 # ─────────────────────────────────────────────
