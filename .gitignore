@@ -2,3 +2,5 @@
 data
 flux2
 .env
+*.pyc
+__pycache__/
